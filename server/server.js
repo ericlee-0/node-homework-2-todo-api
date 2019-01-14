@@ -14,11 +14,11 @@ app.use(bodyParser.json())
 
 app.post('/todos',(req,res)=>{
    console.log(req.body);
-  // var todo = new Todo({
-  //   text: req.body.text,
-  // });
-  var todo = new Todo(req.body);
-  
+  var todo = new Todo({
+    text: req.body.text,
+  });
+  // var todo = new Todo(req.body);
+
   todo.save().then((doc)=>{
     res.send(doc);
   },(e)=>{
@@ -31,3 +31,6 @@ app.post('/todos',(req,res)=>{
 app.listen(3000, ()=>{
   console.log('Starting on port 3000')
 });
+
+
+module.exports = {app}
