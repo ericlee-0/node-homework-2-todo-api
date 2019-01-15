@@ -1,6 +1,9 @@
-var express = require('express');
+const _ = require('lodash');
+
+const express = require('express');
 //take json ojb and parse and convert to req obj
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose')
 
@@ -8,7 +11,7 @@ var {Todo} = require('./models/todo')
 
 var {User} = require('./models/user')
 
-const {ObjectID} = require('mongodb');
+
 
 
 var app = express();
@@ -92,6 +95,38 @@ app.delete('/todos/:id',(req,res)=>{
   })
 
 })
+
+
+app.patch('/todos/:id', (req, res) =>{
+  var id = req.params.id;
+  var body = _.pick(req.body, ['text', 'completed']);
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+  console.log(body.completed);
+  console.log(_.isBoolean(body.completed));
+  if(_.isBoolean(body.completed) && body.completed){
+  // if(body.completed){
+    body.completedAt = new Date().getTime();
+  }else{
+    body.completed = false;
+    body.completedAt = null;
+
+  }
+console.log(body);
+  Todo.findByIdAndUpdate(id,{$set:body}, {new: true}).then((todo)=>{
+    if(!todo){
+      return res.status(404).send();
+    }
+
+    res.send({todo});
+  }).catch((e)=>{
+    res.status(400).send();
+  })
+});
+
+
 app.listen(port, ()=>{
   console.log(`Started up at port ${port}`);
 });
