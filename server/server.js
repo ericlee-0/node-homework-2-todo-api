@@ -84,7 +84,7 @@ app.delete('/todos/:id',(req,res)=>{
 
   Todo.findByIdAndDelete(id).then((todo)=>{
     if(!todo){
-      return res.send('No data')
+      return res.status(404).send('No data')
     }
     res.send({todo});
   }).catch((e)=>{
