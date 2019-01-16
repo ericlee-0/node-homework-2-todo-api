@@ -84,6 +84,29 @@ var  UserSchema = new mongoose.Schema({
 
   };
 
+
+UserSchema.statics.findByCredentials = function(email, password){
+  var User = this;
+  
+  return User.findOne({email}).then((user)=>{
+    if(!user){
+      return Promise.reject();
+    }
+
+    return new Promise((resolve, reject)=>{
+      //user bycript.compare to
+      bcrypt.compare(password, user.password, (err, res)=>{
+          if(res){
+            resolve(user); //send user
+          }else {
+            reject(); // send 400
+          }
+
+        })
+    })
+  });
+}
+
 UserSchema.pre('save',function(next) {
   var user = this;
 
