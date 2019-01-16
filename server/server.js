@@ -13,7 +13,7 @@ var {Todo} = require('./models/todo')
 
 var {User} = require('./models/user')
 var {authenticate} = require('./middleware/authenticate')
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
 
 
